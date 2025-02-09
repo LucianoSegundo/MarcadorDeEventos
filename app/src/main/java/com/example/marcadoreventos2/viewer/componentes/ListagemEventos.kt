@@ -40,7 +40,7 @@ fun listarEventos(
         modifier = modifier.fillMaxWidth().padding(8.dp).clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (evento.numeroConfirmacoes!! < evento.numVagas) {
+        if (evento.numeroConfirmacoes!! < evento.numVagas!!) {
             Icon(
                 Icons.Rounded.Add,
                 contentDescription = "",
@@ -57,7 +57,7 @@ fun listarEventos(
         Column(modifier = modifier.weight(1f).padding(top = 12.dp)) {
             Text(
                 modifier = Modifier,
-                text = evento.nomeEvento,
+                text = evento?.nomeEvento?:"algo deu erradp",
                 fontSize = 24.sp
             )
             Row(modifier = modifier) {

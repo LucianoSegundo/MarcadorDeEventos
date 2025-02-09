@@ -15,6 +15,8 @@ sealed interface Route {
     @Serializable
     data object tHome : Route
     @Serializable
+    data object tHomeMapa : Route
+    @Serializable
     data object tLeitura : Route
     @Serializable
     data object tCriacao : Route

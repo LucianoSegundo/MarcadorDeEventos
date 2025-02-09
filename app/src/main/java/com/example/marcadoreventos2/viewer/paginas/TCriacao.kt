@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.marcadoreventos.model.entidades.eventos
 import com.example.marcadoreventos2.model.MainViewModel
 import com.example.marcadoreventos2.ui.nav.Route
 import com.example.marcadoreventos2.ui.theme.corTextoTopBar
@@ -84,10 +85,21 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                 rememberScrollState()
             )) {
 
+            caixaTexto(
+                titulo = "Nome do Evento",
+                valor = nomeEvento,
+                nLinhas = 1,
+                onValueChange = {nomeEvento = it},
+                modifier = Modifier
+                    .padding(top = 50.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)
+                    .fillMaxWidth(),
+                keyboardType = KeyboardType.Text,
+
+                )
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(top = 50.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)){
+                .padding(top = 5.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)){
             caixaTexto(
                 titulo = "Data de Inicio",
                 valor = dataInicio,
@@ -96,7 +108,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                 modifier = Modifier
                     .padding(end = 10.dp,)
                     .width(largura),
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Text
             )
 
             caixaTexto(
@@ -107,7 +119,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                 modifier = Modifier
                     .padding(start = 10.dp,)
                     .width(largura),
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Text
             )
         }
 
@@ -154,7 +166,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
         caixaTexto(
             titulo = "Descrição do Evento",
             valor = descricao,
-            nLinhas = 7,
+            nLinhas = 5,
             onValueChange = {descricao = it},
             modifier = Modifier
                 .padding(top = 5.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)
@@ -165,12 +177,30 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
 
         botao(
             texto = "Salvar",
-            enabled = nomeEvento.isNotBlank() && dataInicio.isNotBlank() && dataInicio.isNotBlank() && cidade.isNotBlank() && estado.isNotBlank() && descricao.isNotBlank() && nVagas >0   ,
+            enabled = nomeEvento.isNotBlank() && dataInicio.isNotBlank() && dataInicio.isNotBlank() && cidade.isNotBlank() && estado.isNotBlank() && nVagas >0   ,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
                 .padding(20.dp),
-            onCLick = {}
+            onCLick = {
+
+                var autor = viewModel.user
+                var evento = eventos(
+                    nomeEvento = nomeEvento,
+                    autor = autor!!,
+                    estadoEvento = estado,
+                    cidadeEvento = cidade,
+                    numVagas = nVagas,
+                    numeroConfirmacoes = 0,
+                    inicio = dataInicio,
+                    termino = datTermino,
+                    descricao = descricao,
+                    location = viewModel.localizacaoSelecionada!!
+                )
+
+                viewModel.addEvento(evento);
+
+            }
         )
         botao(
             texto = "Voltar",
@@ -180,7 +210,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                 .height(80.dp)
                 .padding(20.dp),
             onCLick = {
-                navController.navigate(Route.tHome)
+                navController.popBackStack()
             }
         )
 
