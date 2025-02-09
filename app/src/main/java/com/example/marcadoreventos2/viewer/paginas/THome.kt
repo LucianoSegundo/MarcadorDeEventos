@@ -1,15 +1,18 @@
 package com.example.marcadoreventos2.viewer.paginas
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -17,6 +20,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -29,12 +33,13 @@ import com.example.marcadoreventos2.ui.theme.corTopBar
 import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.listarEventos
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun tHome(navController: NavController, viewModel: MainViewModel){
 
     val listaEventos = viewModel.ColetarListaEventos
+    val activity = LocalContext.current as? Activity
 
     Scaffold(
         topBar = {
@@ -52,7 +57,17 @@ fun tHome(navController: NavController, viewModel: MainViewModel){
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White)
+                },
+                actions = {
+                    IconButton( onClick = { activity?.finish() } ) {
+                        Icon(
+                            imageVector =
+                            Icons.AutoMirrored.Filled.ExitToApp,
+                            contentDescription = "Localized description"
+                        )
+                    }
                 }
+
 
             )
         },

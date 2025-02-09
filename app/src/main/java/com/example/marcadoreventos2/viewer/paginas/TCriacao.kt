@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+
 import androidx.compose.material3.ExperimentalMaterial3Api
+
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,13 +35,14 @@ import com.example.marcadoreventos2.ui.theme.corTextoTopBar
 import com.example.marcadoreventos2.ui.theme.corTopBar
 import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.botao
-import com.example.marcadoreventos2.viewer.componentes.caixaLeituraTexto
 import com.example.marcadoreventos2.viewer.componentes.caixaTexto
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState"
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun tCriacao(navController: NavController, viewModel: MainViewModel){
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -56,7 +59,8 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White)
-                }
+                },
+
 
             )
         },

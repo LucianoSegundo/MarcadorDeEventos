@@ -28,9 +28,7 @@ class MainActivity : ComponentActivity() {
             val viewModel : MainViewModel by viewModels()
             val navController = rememberNavController()
 
-            NavHost(navController, startDestination = Route.tLogin) {
-                composable<Route.tLogin>{ tLogin(navController,viewModel) }
-                composable<Route.tCadastro>{ tCadastro(navController, viewModel) }
+            NavHost(navController, startDestination = Route.tHome) {
                 composable<Route.tHome>{ tHome(navController, viewModel) }
                 composable<Route.tCriacao>{ tCriacao(navController, viewModel) }
                 composable<Route.tLeitura>{ tLeitura(navController, viewModel) }

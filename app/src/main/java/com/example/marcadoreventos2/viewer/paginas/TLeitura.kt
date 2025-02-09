@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -31,9 +30,8 @@ import com.example.marcadoreventos2.ui.theme.corTopBar
 import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.botao
 import com.example.marcadoreventos2.viewer.componentes.caixaLeituraTexto
-import com.example.marcadoreventos2.viewer.componentes.caixaTexto
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun tLeitura(navController: NavController, viewModel: MainViewModel){
@@ -56,8 +54,7 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White)
-                }
-
+                },
             )
         },
         containerColor = fundo

@@ -1,6 +1,7 @@
 package com.example.marcadoreventos2.viewer.paginas
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -37,11 +39,16 @@ import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.botao
 import com.example.marcadoreventos2.viewer.componentes.caixaTexto
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState",
+    "ContextCastToActivity"
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun tCadastro(navController: NavController, viewModel: MainViewModel){
+fun tCadastro(){
+    val activity = LocalContext.current as? Activity
+
     Scaffold(
+
         topBar = {
             TopAppBar(
                 colors = TopAppBarColors(
@@ -52,7 +59,9 @@ fun tCadastro(navController: NavController, viewModel: MainViewModel){
                     actionIconContentColor = corTextoTopBar,
                 ),
                actions = {
-                   IconButton(onClick = { navController.navigate(Route.tLogin) }) {
+                   IconButton(onClick = {
+                       activity?.finish()
+                   }) {
 
                        Icon(
                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
@@ -82,6 +91,7 @@ fun tCadastro(navController: NavController, viewModel: MainViewModel){
             var usuario by mutableStateOf("")
             var senha by mutableStateOf("")
             var confirmacao by mutableStateOf("")
+            var email by mutableStateOf("")
 
             caixaTexto(
                 valor = usuario,
@@ -91,6 +101,17 @@ fun tCadastro(navController: NavController, viewModel: MainViewModel){
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier
                     .padding(top = 60.dp, bottom = 60.dp, start = 15.dp, end = 15.dp)
+                    .fillMaxWidth(),
+
+                )
+            caixaTexto(
+                valor = email,
+                titulo = "Email",
+                onValueChange = {email = it},
+                nLinhas = 1,
+                keyboardType = KeyboardType.Email,
+                modifier = Modifier
+                    .padding(top = 20.dp, bottom = 60.dp, start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
 
                 )
@@ -119,12 +140,14 @@ fun tCadastro(navController: NavController, viewModel: MainViewModel){
 
             botao(
                 texto = "Criar Conta",
-                enabled = (senha != "" && confirmacao !="" && usuario !="") && (senha == confirmacao) && (senha.length >= 8),
+                enabled = (senha != "" && confirmacao !="" && usuario !="") && (senha == confirmacao) && (senha.length >= 8) && email != "",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(20.dp),
-                onCLick = { navController.navigate(Route.tLogin) },
+                onCLick = {
+                    activity?.finish()
+                },
             )
         }
     }
