@@ -2,7 +2,6 @@ package com.example.marcadoreventos2.model
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.marcadoreventos.model.entidades.eventos
@@ -58,12 +57,15 @@ class MainViewModel (private val db: FBDatabase): ViewModel(),
     }
 
     override fun onEventoUpdate(evento: eventos) {
-        TODO("Not yet implemented")
+        _EventosColetados.remove(evento)
+        _EventosColetados.add(evento)
+
     }
 
     override fun onEventoRemoved(evento: eventos) {
         _EventosColetados.remove(evento)
     }
+
 }
 
 class MainViewModelFactory(private val db : FBDatabase) :

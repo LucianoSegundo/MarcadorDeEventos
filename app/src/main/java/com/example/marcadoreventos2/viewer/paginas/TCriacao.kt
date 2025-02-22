@@ -151,6 +151,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
             )
         }
 
+
             caixaTexto(
                 titulo = "Total de Vagas",
                 valor = nVagas.toString(),
@@ -191,14 +192,16 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                     estadoEvento = estado,
                     cidadeEvento = cidade,
                     numVagas = nVagas,
-                    numeroConfirmacoes = 0,
+                    numeroConfirmacoes = 1,
                     inicio = dataInicio,
                     termino = datTermino,
                     descricao = descricao,
-                    location = viewModel.localizacaoSelecionada!!
+                    location = viewModel.localizacaoSelecionada!!,
+                    participantes = mutableListOf(viewModel.user!!)
                 )
 
                 viewModel.addEvento(evento);
+                navController.popBackStack()
 
             }
         )

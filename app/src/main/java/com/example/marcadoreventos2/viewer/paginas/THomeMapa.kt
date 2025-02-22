@@ -111,10 +111,6 @@ fun tHomeMapa(navController: NavController, viewModel: MainViewModel, launcher: 
     ){innerpadding ->
         launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
 
-        val recife = LatLng(-7.05, -32.9)
-        val caruaru = LatLng(-8.27, -35.98)
-        val joaopessoa = LatLng(-7.12, -34.84)
-
         GoogleMap(
             modifier = Modifier.fillMaxSize().padding(innerpadding),
             cameraPositionState = camPosState,
@@ -124,14 +120,25 @@ fun tHomeMapa(navController: NavController, viewModel: MainViewModel, launcher: 
             }
 
         ) {
-
+            var user = viewModel.user;
             viewModel.ColetarListaEventos.forEach{
                 if(it.location != null){
                     var nv = it.numVagas!!
                     var nc = it.numeroConfirmacoes!!
                     var icone: BitmapDescriptor
-
-                        if(nc == nv){
+                    var autor = it.autor
+                        if(autor?.equals(user) == true) {
+                            if (nc == nv) {
+                                icone = BitmapDescriptorFactory.defaultMarker(
+                                    BitmapDescriptorFactory.HUE_GREEN
+                                )
+                            }
+                            else{
+                                icone = BitmapDescriptorFactory.defaultMarker(
+                                    BitmapDescriptorFactory.HUE_CYAN)
+                            }
+                        }
+                        else if(nc == nv){
                             icone = BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_RED)
                         }

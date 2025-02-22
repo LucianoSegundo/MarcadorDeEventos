@@ -84,12 +84,7 @@ fun tDisponiveis(navController: NavController, viewModel: MainViewModel) {
             )
             BottomNavBar(navController = navController, items)
         },
-        floatingActionButton =  {
-            FloatingActionButton(onClick = {navController.navigate(Route.tCriacao) }) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar")
-            }
-        },
-        containerColor = fundo
+       containerColor = fundo
 
     ){innerPadding ->
 
@@ -98,9 +93,10 @@ fun tDisponiveis(navController: NavController, viewModel: MainViewModel) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+           val user = viewModel.user;
             items(listaEventos) { evento ->
+                if(evento.autor?.equals(user) == false)
                 listarEventos(evento = evento, onClose = {
-                    viewModel.CancelarEvento(evento)
 
                 }, onClick = {
                     viewModel.setEventoManipulado(evento)

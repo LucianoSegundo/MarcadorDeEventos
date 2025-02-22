@@ -39,6 +39,7 @@ import com.example.marcadoreventos2.viewer.componentes.caixaLeituraTexto
 fun tLeitura(navController: NavController, viewModel: MainViewModel){
 
     val evento: eventos? = viewModel.EventoManuseado
+    val user = viewModel.user;
 
     Scaffold(
         topBar = {
@@ -140,16 +141,29 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
             var validarBotao:Boolean
 
                 if (evento != null) {
-                    validarBotao = evento.numeroConfirmacoes!! < evento.numVagas!!
+                    val user = viewModel.user;
+
+
+                    val usuario  = evento?.participantes?.find { it.name  == user?.name && it.email  == user?.email  }
+
+                    validarBotao = evento.numeroConfirmacoes!! < evento.numVagas!! && usuario == null
+
                 }else{
                     validarBotao = false
                 }
 
                     botao(
                         texto = "Participar",
-                        enabled = validarBotao,
+                        enabled = validarBotao && (evento?.autor?.equals(user) == false),
                         modifier = Modifier.fillMaxWidth().height(80.dp).padding(20.dp),
-                        onCLick = {}
+                        onCLick = {
+
+                            evento?.numeroConfirmacoes = evento?.numeroConfirmacoes?.plus(1);
+                            evento?.participantes?.add(viewModel.user!!)
+                            viewModel.addEvento(evento!!)
+                            navController.popBackStack()
+
+                        }
                     )
                     botao(
                         texto = "Voltar",

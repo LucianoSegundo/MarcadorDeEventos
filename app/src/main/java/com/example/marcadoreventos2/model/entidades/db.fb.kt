@@ -26,6 +26,9 @@ class FBEvento {
     var lat : Double? = null
     var lng : Double? = null
 
+    var participantes: List<User>? = null
+
+
     var descricao: String? = null
 
     fun toEvento(): eventos {
@@ -41,13 +44,14 @@ class FBEvento {
             termino = termino!!,
             autor = User(email = autoremail!!, name = autornome!!),
             numeroConfirmacoes = numeroConfirmacoes!!,
-            numVagas = numVagas!!
+            numVagas = numVagas!!,
+            participantes = participantes?.toMutableList()!!
         )
     }
 }
 
 fun eventos.toFBEvento() : FBEvento {
-    val evento_fb = toFBEvento()
+    val evento_fb = FBEvento()
     evento_fb.nomeEvento = this.nomeEvento
 
     evento_fb.lat = this.location?.latitude ?: 0.0
@@ -66,7 +70,7 @@ fun eventos.toFBEvento() : FBEvento {
 
     evento_fb.numVagas = this.numVagas?:0
     evento_fb.numeroConfirmacoes = this.numeroConfirmacoes?:0
-
+    evento_fb.participantes = this.participantes.toList()
     return evento_fb
 }
 
@@ -107,7 +111,7 @@ class FBDatabase {
                     listener?.onUserLoaded(user.toUser())
                 }
             }
-            eventosListReg = refCurrUser.collection("eventos")
+            eventosListReg = db.collection("eventos")
                 .addSnapshotListener { snapshots, ex ->
                     if (ex != null) return@addSnapshotListener
                     snapshots?.documentChanges?.forEach { change ->
@@ -116,6 +120,8 @@ class FBDatabase {
                             listener?.onEventoAdded(FBEvento.toEvento())
                         } else if (change.type == DocumentChange.Type.REMOVED) {
                             listener?.onEventoRemoved(FBEvento.toEvento())
+                        } else if (change.type == DocumentChange.Type.MODIFIED) {
+                            listener?.onEventoUpdate(FBEvento.toEvento())
                         }
                     }
                 }
@@ -135,17 +141,22 @@ class FBDatabase {
         if (auth.currentUser == null)
             throw RuntimeException("User not logged in!")
         val uid = auth.currentUser!!.uid
-        db.collection("users").document(uid).collection("eventos")
-            .document(evento.nomeEvento).set(evento.toFBEvento())
+        db.collection("eventos")
+            .document(evento.hashCode().toString() + evento.nomeEvento ).set(evento.toFBEvento())
 
-    }
-    fun remove(evento: eventos) {
+        }
+
+        fun remove(evento: eventos) {
         if (auth.currentUser == null)
             throw RuntimeException("User not logged in!")
         val uid = auth.currentUser!!.uid
-        db.collection("users").document(uid).collection("eventos")
-            .document(evento.nomeEvento).delete();
+        db.collection("eventos")
+            .document(evento.hashCode().toString() + evento.nomeEvento ).delete();
 
     }
 
-}
+
+    }
+
+
+

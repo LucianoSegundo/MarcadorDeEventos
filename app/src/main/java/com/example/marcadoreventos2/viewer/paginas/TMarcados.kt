@@ -83,12 +83,7 @@ fun tMarcados(navController: NavController, viewModel: MainViewModel) {
             )
             BottomNavBar(navController = navController, items)
         },
-        floatingActionButton =  {
-            FloatingActionButton(onClick = {navController.navigate(Route.tCriacao) }) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar")
-            }
-        },
-        containerColor = fundo
+      containerColor = fundo
 
     ){innerPadding ->
 
@@ -98,6 +93,7 @@ fun tMarcados(navController: NavController, viewModel: MainViewModel) {
                 .padding(innerPadding)
         ) {
             items(listaEventos) { evento ->
+
                 listarEventos(evento = evento, onClose = {
                     viewModel.CancelarEvento(evento)
 
@@ -105,6 +101,9 @@ fun tMarcados(navController: NavController, viewModel: MainViewModel) {
                     viewModel.setEventoManipulado(evento)
                     navController.navigate(Route.tLeitura)
                 })
+
+
+
             }
         }
     }
