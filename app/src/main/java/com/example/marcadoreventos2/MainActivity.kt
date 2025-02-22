@@ -24,6 +24,7 @@ import com.example.marcadoreventos2.viewer.paginas.tLeitura
 import com.example.marcadoreventos2.viewer.paginas.tLogin
 import com.example.marcadoreventos2.viewer.paginas.tMarcados
 import androidx.navigation.NavDestination.Companion.hasRoute
+import com.example.marcadoreventos2.api.WeatherService
 import com.example.marcadoreventos2.model.MainViewModelFactory
 import com.example.marcadoreventos2.model.entidades.FBDatabase
 import com.example.marcadoreventos2.viewer.paginas.tHomeMapa
@@ -36,8 +37,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             MarcadorEventos2Theme {
                 val fbDB = remember { FBDatabase() }
+                val weatherService = remember { WeatherService() }
                 val viewModel : MainViewModel = viewModel(
-                    factory = MainViewModelFactory(fbDB)
+                    factory = MainViewModelFactory(fbDB, weatherService)
                 )
 
                 val navController = rememberNavController()

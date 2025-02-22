@@ -11,7 +11,6 @@ data class eventos(
     val nomeEvento : String,
     val autor: User? = null,
 
-    val estadoEvento: String? = null,
     val cidadeEvento: String? = null,
 
     val numVagas: Int? = null,
@@ -35,7 +34,6 @@ data class eventos(
 
         if (nomeEvento != other.nomeEvento) return false
         if (autor != other.autor) return false
-        if (estadoEvento != other.estadoEvento) return false
         if (cidadeEvento != other.cidadeEvento) return false
         if (numVagas != other.numVagas) return false
         if (inicio != other.inicio) return false
@@ -49,7 +47,6 @@ data class eventos(
     override fun hashCode(): Int {
         var result = nomeEvento.hashCode()
         result = 31 * result + (autor?.hashCode() ?: 0)
-        result = 31 * result + (estadoEvento?.hashCode() ?: 0)
         result = 31 * result + (cidadeEvento?.hashCode() ?: 0)
         result = 31 * result + (numVagas ?: 0)
         result = 31 * result + (inicio?.hashCode() ?: 0)

@@ -8,9 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -92,15 +90,22 @@ fun tMarcados(navController: NavController, viewModel: MainViewModel) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            val user = viewModel.user;
             items(listaEventos) { evento ->
+                if (evento.autor?.equals(user) == false){
 
-                listarEventos(evento = evento, onClose = {
-                    viewModel.CancelarEvento(evento)
+                    val usuario  = evento?.participantes?.find { it.name  == user?.name && it.email  == user?.email  }
 
-                }, onClick = {
-                    viewModel.setEventoManipulado(evento)
-                    navController.navigate(Route.tLeitura)
-                })
+                    if(usuario != null)
+                    listarEventos(evento = evento, onClose = {
+                      evento.numeroConfirmacoes = evento.numeroConfirmacoes!! -1
+                      evento.participantes.remove(user);
+                      viewModel.updateEvento(evento)
+                    }, onClick = {
+                        viewModel.setEventoManipulado(evento)
+                        navController.navigate(Route.tLeitura)
+                    })
+            }
 
 
 

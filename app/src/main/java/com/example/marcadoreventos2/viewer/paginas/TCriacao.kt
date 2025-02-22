@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.marcadoreventos.model.entidades.eventos
 import com.example.marcadoreventos2.model.MainViewModel
-import com.example.marcadoreventos2.ui.nav.Route
 import com.example.marcadoreventos2.ui.theme.corTextoTopBar
 import com.example.marcadoreventos2.ui.theme.corTopBar
 import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.botao
+import com.example.marcadoreventos2.viewer.componentes.caixaLeituraTexto
 import com.example.marcadoreventos2.viewer.componentes.caixaTexto
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState"
@@ -71,8 +71,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
             var nomeEvento by remember { mutableStateOf("") }
             var  dataInicio by remember { mutableStateOf("") }
             var  datTermino by remember { mutableStateOf("") }
-            var  cidade by remember { mutableStateOf("") }
-            var  estado by remember { mutableStateOf("") }
+            var  cidade by remember { mutableStateOf(viewModel.cidadeNome!!) }
             var  nVagas by remember { mutableStateOf(0) }
             var  descricao by remember { mutableStateOf("") }
 
@@ -109,6 +108,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                     .padding(end = 10.dp,)
                     .width(largura),
                 keyboardType = KeyboardType.Text
+
             )
 
             caixaTexto(
@@ -123,34 +123,15 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
             )
         }
 
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)){
-            caixaTexto(
+            caixaLeituraTexto(
                 titulo = "Cidade",
                 valor = cidade,
                 nLinhas = 1,
                 onValueChange = {cidade = it},
                 modifier = Modifier
-                    .padding(end = 10.dp,)
-                    .width(largura),
-                keyboardType = KeyboardType.Text
+                    .fillMaxWidth()
+                    .padding(top = 5.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)
             )
-
-            caixaTexto(
-                titulo = "Estado",
-                valor = estado,
-                nLinhas = 1,
-                onValueChange = {estado = it},
-                modifier = Modifier
-                    .padding(start = 10.dp,)
-                    .width(largura),
-                keyboardType = KeyboardType.Text
-
-            )
-        }
-
 
             caixaTexto(
                 titulo = "Total de Vagas",
@@ -160,8 +141,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                 modifier = Modifier
                     .padding(top = 5.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
-                keyboardType = KeyboardType.Number,
-
+                keyboardType = KeyboardType.Text
             )
 
         caixaTexto(
@@ -178,7 +158,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
 
         botao(
             texto = "Salvar",
-            enabled = nomeEvento.isNotBlank() && dataInicio.isNotBlank() && dataInicio.isNotBlank() && cidade.isNotBlank() && estado.isNotBlank() && nVagas >0   ,
+            enabled = nomeEvento.isNotBlank() && dataInicio.isNotBlank() && dataInicio.isNotBlank() && cidade.isNotBlank() && nVagas >0   ,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
@@ -189,7 +169,6 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                 var evento = eventos(
                     nomeEvento = nomeEvento,
                     autor = autor!!,
-                    estadoEvento = estado,
                     cidadeEvento = cidade,
                     numVagas = nVagas,
                     numeroConfirmacoes = 1,

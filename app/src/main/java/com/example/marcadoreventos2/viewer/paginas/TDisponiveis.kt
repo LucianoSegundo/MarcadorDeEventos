@@ -95,13 +95,16 @@ fun tDisponiveis(navController: NavController, viewModel: MainViewModel) {
         ) {
            val user = viewModel.user;
             items(listaEventos) { evento ->
-                if(evento.autor?.equals(user) == false)
-                listarEventos(evento = evento, onClose = {
+                if(evento.autor?.equals(user) == false){
+                    val usuario  = evento?.participantes?.find { it.name  == user?.name && it.email  == user?.email  }
+
+                    if (usuario == null)
+                    listarEventos(evento = evento, onClose = {
 
                 }, onClick = {
                     viewModel.setEventoManipulado(evento)
                     navController.navigate(Route.tLeitura)
-                })
+                })}
             }
         }
     }

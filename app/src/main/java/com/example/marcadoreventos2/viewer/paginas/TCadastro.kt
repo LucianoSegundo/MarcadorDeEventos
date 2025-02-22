@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -132,6 +133,7 @@ fun tCadastro(){
                 modifier = Modifier
                     .padding(top = 20.dp, bottom = 60.dp, start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
 
                 )
             caixaTexto(
@@ -143,8 +145,10 @@ fun tCadastro(){
                 modifier = Modifier
                     .padding(top = 20.dp, bottom = 60.dp, start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
 
-                )
+
+            )
 
             botao(
                 texto = "Criar Conta",

@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.marcadoreventos.model.entidades.eventos
+import com.example.marcadoreventos2.api.WeatherService
 import com.example.marcadoreventos2.model.entidades.FBDatabase
 import com.example.marcadoreventos2.model.entidades.User
 import com.google.android.gms.maps.model.LatLng
 
-class MainViewModel (private val db: FBDatabase): ViewModel(),
+class MainViewModel (private val db: FBDatabase,
+                     private val service : WeatherService): ViewModel(),
     FBDatabase.Listener {
 
     private val _EventosColetados = mutableStateListOf<eventos>()
@@ -18,13 +20,15 @@ class MainViewModel (private val db: FBDatabase): ViewModel(),
     private var _EventoSelecionado = mutableStateOf<eventos?> (null)
     val EventoManuseado: eventos?  get() = _EventoSelecionado.value
 
-    private val _localizacaoSelecionada = mutableStateOf<LatLng?> (null)
 
     private val _user = mutableStateOf<User?> (null)
     val user : User? get() = _user.value
 
+    private val _localizacaoSelecionada = mutableStateOf<LatLng?> (null)
     val localizacaoSelecionada: LatLng?  get() = _localizacaoSelecionada.value
 
+    private val _cidadeNome = mutableStateOf ("")
+    val cidadeNome: String?  get() = _cidadeNome.value
 
     init {
         db.setListener(this)
@@ -37,6 +41,12 @@ class MainViewModel (private val db: FBDatabase): ViewModel(),
 
     fun setlocalizacaoSelecionada(latlang: LatLng) {
         _localizacaoSelecionada.value = latlang
+
+        service.getName(latlang.latitude, latlang.longitude) { name ->
+            if (name != null) {
+                _cidadeNome.value = name
+            }
+        }
     }
 
     // manipulação de lista
@@ -47,6 +57,12 @@ class MainViewModel (private val db: FBDatabase): ViewModel(),
 
     fun addEvento(evento: eventos) {
         db.add(evento)
+    }
+
+    fun updateEvento(evento: eventos) {
+        db.update(evento)
+        _EventosColetados.remove(evento)
+        _EventosColetados.add(evento)
     }
 
     override fun onUserLoaded(user: User) {
@@ -66,13 +82,15 @@ class MainViewModel (private val db: FBDatabase): ViewModel(),
         _EventosColetados.remove(evento)
     }
 
+
+
 }
 
-class MainViewModelFactory(private val db : FBDatabase) :
+class MainViewModelFactory(private val db : FBDatabase, private val service : WeatherService) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(db) as T
+            return MainViewModel(db, service) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

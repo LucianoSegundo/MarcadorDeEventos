@@ -95,23 +95,14 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
                 )
             }
 
-            Row(Modifier.fillMaxWidth().padding( top = 5.dp, bottom =  20.dp, start = 15.dp, end = 15.dp)){
                 caixaLeituraTexto(
                     titulo = "Cidade",
                     valor = evento?.cidadeEvento?:"Algo deu errado",
                     nLinhas = 1,
                     onValueChange = {},
-                    modifier = Modifier.padding(end = 10.dp,).width(largura)
+                    modifier = Modifier.fillMaxWidth().padding( top = 5.dp, bottom =  20.dp, start = 15.dp, end = 15.dp)
                 )
 
-                caixaLeituraTexto(
-                    titulo = "Estado",
-                    valor = evento?.estadoEvento?:"Algo deu errado",
-                    nLinhas = 1,
-                    onValueChange = {},
-                    modifier = Modifier.padding(start = 10.dp,).width(largura)
-                )
-            }
 
             Row(Modifier.fillMaxWidth().padding( top = 5.dp, bottom =  20.dp, start = 15.dp, end = 15.dp)){
                 caixaLeituraTexto(
@@ -160,7 +151,7 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
 
                             evento?.numeroConfirmacoes = evento?.numeroConfirmacoes?.plus(1);
                             evento?.participantes?.add(viewModel.user!!)
-                            viewModel.addEvento(evento!!)
+                            viewModel.updateEvento(evento!!)
                             navController.popBackStack()
 
                         }

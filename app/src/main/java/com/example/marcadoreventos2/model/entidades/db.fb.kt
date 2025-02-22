@@ -14,7 +14,6 @@ class FBEvento {
     var autornome: String? = null
     var autoremail: String? = null
 
-    var estadoEvento: String? = null
     var cidadeEvento: String? = null
 
     var numVagas: Int? = null
@@ -36,7 +35,6 @@ class FBEvento {
 
         return eventos(
             location = latlng!!,
-            estadoEvento = estadoEvento!!,
             descricao = descricao!!,
             inicio = inicio!!,
             cidadeEvento = cidadeEvento!!,
@@ -58,7 +56,6 @@ fun eventos.toFBEvento() : FBEvento {
     evento_fb.lng = this.location?.longitude ?: 0.0
 
     evento_fb.cidadeEvento = this.cidadeEvento?:"erro"
-    evento_fb.estadoEvento = this.estadoEvento?:"erro"
 
     evento_fb.autornome = this.autor?.name?:"erro"
     evento_fb.autoremail = this.autor?.email?:"erro"
@@ -152,6 +149,20 @@ class FBDatabase {
         val uid = auth.currentUser!!.uid
         db.collection("eventos")
             .document(evento.hashCode().toString() + evento.nomeEvento ).delete();
+
+    }
+
+    fun update(evento: eventos) {
+        if (auth.currentUser == null)
+            throw RuntimeException("User not logged in!")
+        val uid = auth.currentUser!!.uid
+
+        val campoAtualizado = hashMapOf<String, Any>(
+            "numeroConfirmacoes" to evento.numeroConfirmacoes!!,  // Exemplo de campo a ser atualizado
+            "participantes" to evento.participantes   // Outro campo a ser atualizado
+        )
+        db.collection("eventos")
+            .document(evento.hashCode().toString() + evento.nomeEvento ).update(campoAtualizado)
 
     }
 

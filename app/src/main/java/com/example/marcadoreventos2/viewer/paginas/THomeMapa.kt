@@ -127,16 +127,22 @@ fun tHomeMapa(navController: NavController, viewModel: MainViewModel, launcher: 
                     var nc = it.numeroConfirmacoes!!
                     var icone: BitmapDescriptor
                     var autor = it.autor
-                        if(autor?.equals(user) == true) {
+                    val usuario  = it?.participantes?.find { it.name  == user?.name && it.email  == user?.email  }
+
+                    if(autor?.equals(user) == true) {
                             if (nc == nv) {
                                 icone = BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_GREEN
+                                    BitmapDescriptorFactory.HUE_BLUE
                                 )
                             }
                             else{
                                 icone = BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_CYAN)
+                                    BitmapDescriptorFactory.HUE_AZURE)
                             }
+                        }
+                        else if(usuario != null){
+                        icone = BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_GREEN)
                         }
                         else if(nc == nv){
                             icone = BitmapDescriptorFactory.defaultMarker(
@@ -147,9 +153,11 @@ fun tHomeMapa(navController: NavController, viewModel: MainViewModel, launcher: 
                                 BitmapDescriptorFactory.HUE_ORANGE)
                         }
                         else{
-                            icone = BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_YELLOW)
+                        icone = BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_YELLOW)
                         }
+
+
 
                     var evento = it;
                     Marker(
