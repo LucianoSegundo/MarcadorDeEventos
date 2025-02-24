@@ -141,7 +141,7 @@ fun tCriacao(navController: NavController, viewModel: MainViewModel){
                 modifier = Modifier
                     .padding(top = 5.dp, bottom = 20.dp, start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
-                keyboardType = KeyboardType.Text
+                keyboardType = KeyboardType.Number
             )
 
         caixaTexto(
