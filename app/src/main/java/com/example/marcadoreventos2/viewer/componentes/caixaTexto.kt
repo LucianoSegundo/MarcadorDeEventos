@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 
 import androidx.compose.ui.unit.sp
 import com.example.marcadoreventos2.ui.theme.corFocoInpute
@@ -22,6 +23,7 @@ fun caixaLeituraTexto(
     onValueChange: (String) -> Unit,
     nLinhas: Int,
     modifier: Modifier,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 
 ){
     OutlinedTextField(
@@ -40,7 +42,8 @@ fun caixaLeituraTexto(
             unfocusedIndicatorColor = corInputeBorda,
             focusedTextColor = Color.Black
         ),
-        modifier = modifier
+        modifier = modifier,
+        visualTransformation = visualTransformation
 
     )
 
@@ -53,7 +56,8 @@ fun caixaTexto(
     onValueChange: (String) -> Unit,
     nLinhas: Int,
     modifier: Modifier,
-    keyboardType: KeyboardType
+    keyboardType: KeyboardType,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ){
     OutlinedTextField(
         value = valor,
@@ -71,7 +75,9 @@ fun caixaTexto(
             unfocusedIndicatorColor = corInputeBorda,
             focusedTextColor = Color.Black
         ),
-        modifier = modifier
+
+        modifier = modifier,
+        visualTransformation = visualTransformation
 
     )
 

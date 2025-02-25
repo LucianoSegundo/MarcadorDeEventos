@@ -32,6 +32,8 @@ import com.example.marcadoreventos2.ui.theme.corTextoTopBar
 import com.example.marcadoreventos2.ui.theme.corTopBar
 import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.listarEventos
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +61,10 @@ fun tHome(navController: NavController, viewModel: MainViewModel){
                         color = Color.White)
                 },
                 actions = {
-                    IconButton( onClick = { activity?.finish() } ) {
+                    IconButton( onClick = {
+                        Firebase.auth.signOut()
+                        activity?.finish() }
+                    ) {
                         Icon(
                             imageVector =
                             Icons.AutoMirrored.Filled.ExitToApp,
@@ -79,11 +84,6 @@ fun tHome(navController: NavController, viewModel: MainViewModel){
             )
             BottomNavBar(navController = navController, items)
         },
-        floatingActionButton =  {
-            FloatingActionButton(onClick = {navController.navigate(Route.tCriacao) }) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar")
-            }
-        },
         containerColor = fundo
 
             ){innerPadding ->
@@ -93,7 +93,9 @@ fun tHome(navController: NavController, viewModel: MainViewModel){
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            val user = viewModel.user;
             items(listaEventos) { evento ->
+                if(evento.autor?.equals(user) == true)
                 listarEventos(evento = evento, onClose = {
                     viewModel.CancelarEvento(evento)
 

@@ -3,7 +3,9 @@ package com.example.marcadoreventos2.viewer.paginas
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NO_HISTORY
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marcadoreventos2.MainActivity
@@ -36,6 +39,8 @@ import com.example.marcadoreventos2.ui.theme.corTopBar
 import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.botao
 import com.example.marcadoreventos2.viewer.componentes.caixaTexto
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,7 +96,7 @@ fun tLogin(){
                 nLinhas = 1,
                 keyboardType = KeyboardType.Password,
                 modifier = Modifier.padding(top = 20.dp, bottom = 60.dp, start = 15.dp, end = 15.dp).fillMaxWidth(),
-
+                visualTransformation = PasswordVisualTransformation()
                 )
 
                 botao(
@@ -99,11 +104,20 @@ fun tLogin(){
                     enabled = senha != "" && email != "",
                     modifier = Modifier.fillMaxWidth().height(80.dp).padding(20.dp),
                     onCLick = {
-                        activity?.startActivity(
-                            Intent(activity, MainActivity::class.java).setFlags(
-                                FLAG_ACTIVITY_SINGLE_TOP
-                            )
-                        )
+                        Firebase.auth.signInWithEmailAndPassword(email, senha)
+                            .addOnCompleteListener(activity!!) { task ->
+                                if (task.isSuccessful) {
+                                    activity.startActivity(
+                                        Intent(activity, MainActivity::class.java).setFlags(
+                                            FLAG_ACTIVITY_SINGLE_TOP
+                                        )
+                                    )
+                                    Toast.makeText(activity, "Login OK!", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(activity, "Login FALHOU!", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
                     },
                     )
             botao(
@@ -113,9 +127,10 @@ fun tLogin(){
                 onCLick = {
                     activity?.startActivity(
                         Intent(activity, RegistroActivity::class.java).setFlags(
-                            FLAG_ACTIVITY_SINGLE_TOP
+                            FLAG_ACTIVITY_SINGLE_TOP or FLAG_ACTIVITY_NO_HISTORY
                         )
                     )
+
                 },
             )
 

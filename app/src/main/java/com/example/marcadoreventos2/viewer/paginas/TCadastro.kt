@@ -2,7 +2,9 @@ package com.example.marcadoreventos2.viewer.paginas
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.graphics.drawable.Icon
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,22 +24,29 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.marcadoreventos2.MainActivity
 import com.example.marcadoreventos2.model.MainViewModel
+import com.example.marcadoreventos2.model.entidades.FBDatabase
+import com.example.marcadoreventos2.model.entidades.User
 import com.example.marcadoreventos2.ui.nav.Route
 import com.example.marcadoreventos2.ui.theme.corTextoTopBar
 import com.example.marcadoreventos2.ui.theme.corTopBar
 import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.botao
 import com.example.marcadoreventos2.viewer.componentes.caixaTexto
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState",
     "ContextCastToActivity"
@@ -88,10 +97,10 @@ fun tCadastro(){
             .verticalScroll(
                 rememberScrollState()
             )) {
-            var usuario by mutableStateOf("")
-            var senha by mutableStateOf("")
-            var confirmacao by mutableStateOf("")
-            var email by mutableStateOf("")
+            var usuario by remember { mutableStateOf("") }
+            var senha by remember { mutableStateOf("") }
+            var confirmacao by remember { mutableStateOf("") }
+            var email by remember { mutableStateOf("") }
 
             caixaTexto(
                 valor = usuario,
@@ -124,6 +133,7 @@ fun tCadastro(){
                 modifier = Modifier
                     .padding(top = 20.dp, bottom = 60.dp, start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
 
                 )
             caixaTexto(
@@ -131,12 +141,14 @@ fun tCadastro(){
                 titulo = "Confirmar Senha",
                 onValueChange = {confirmacao = it},
                 nLinhas = 1,
-                keyboardType = KeyboardType.Text,
+                keyboardType = KeyboardType.Password,
                 modifier = Modifier
                     .padding(top = 20.dp, bottom = 60.dp, start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
 
-                )
+
+            )
 
             botao(
                 texto = "Criar Conta",
@@ -146,7 +158,23 @@ fun tCadastro(){
                     .height(80.dp)
                     .padding(20.dp),
                 onCLick = {
-                    activity?.finish()
+
+                    Firebase.auth.createUserWithEmailAndPassword(email, senha)
+                        .addOnCompleteListener(activity!!) { task ->
+                            if (task.isSuccessful) {
+                                FBDatabase().register(User(usuario, email))
+
+                                Toast.makeText(activity,"Cadastrado com sucesso", Toast.LENGTH_LONG).show()
+                                activity.startActivity(
+                                    Intent(activity, MainActivity::class.java).setFlags(
+                                        FLAG_ACTIVITY_SINGLE_TOP )
+                                )
+
+                            } else {
+                                Toast.makeText(activity,
+                                    "Cadastro falhou!", Toast.LENGTH_LONG).show()
+                            }
+                        }
                 },
             )
         }

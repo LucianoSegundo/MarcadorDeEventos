@@ -31,12 +31,15 @@ import com.example.marcadoreventos2.ui.theme.fundo
 import com.example.marcadoreventos2.viewer.componentes.botao
 import com.example.marcadoreventos2.viewer.componentes.caixaLeituraTexto
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ContextCastToActivity")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ContextCastToActivity",
+    "SuspiciousIndentation"
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun tLeitura(navController: NavController, viewModel: MainViewModel){
 
     val evento: eventos? = viewModel.EventoManuseado
+    val user = viewModel.user;
 
     Scaffold(
         topBar = {
@@ -67,7 +70,7 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
 
             caixaLeituraTexto(
                 titulo = "Autor",
-                valor = evento!!.autor?:"Algo deu errado",
+                valor = evento?.autor?.name?:"Algo deu errado",
                 nLinhas = 1,
                 onValueChange = {},
                 modifier = Modifier.padding(top = 50.dp, bottom = 20.dp, start = 15.dp, end = 15.dp).fillMaxWidth(),
@@ -77,7 +80,7 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
             Row(Modifier.fillMaxWidth().padding( top = 5.dp, bottom =  20.dp, start = 15.dp, end = 15.dp)){
                 caixaLeituraTexto(
                     titulo = "Data de Inicio",
-                    valor = evento!!.inicio?:"Algo deu errado",
+                    valor = evento?.inicio?:"Algo deu errado",
                     nLinhas = 1,
                     onValueChange = {},
                     modifier = Modifier.padding(end = 10.dp,).width(largura)
@@ -85,35 +88,26 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
 
                 caixaLeituraTexto(
                     titulo = "Data de Termino",
-                    valor = evento!!.termino?:"Algo deu errado",
+                    valor = evento?.termino?:"Algo deu errado",
                     nLinhas = 1,
                     onValueChange = {},
                     modifier = Modifier.padding(start = 10.dp,).width(largura)
                 )
             }
 
-            Row(Modifier.fillMaxWidth().padding( top = 5.dp, bottom =  20.dp, start = 15.dp, end = 15.dp)){
                 caixaLeituraTexto(
                     titulo = "Cidade",
-                    valor = evento!!.cidadeEvento?:"Algo deu errado",
+                    valor = evento?.cidadeEvento?:"Algo deu errado",
                     nLinhas = 1,
                     onValueChange = {},
-                    modifier = Modifier.padding(end = 10.dp,).width(largura)
+                    modifier = Modifier.fillMaxWidth().padding( top = 5.dp, bottom =  20.dp, start = 15.dp, end = 15.dp)
                 )
 
-                caixaLeituraTexto(
-                    titulo = "Estado",
-                    valor = evento!!.estadoEvento?:"Algo deu errado",
-                    nLinhas = 1,
-                    onValueChange = {},
-                    modifier = Modifier.padding(start = 10.dp,).width(largura)
-                )
-            }
 
             Row(Modifier.fillMaxWidth().padding( top = 5.dp, bottom =  20.dp, start = 15.dp, end = 15.dp)){
                 caixaLeituraTexto(
                     titulo = "Numero de Vagas Ocupadas",
-                    valor = (evento!!.numeroConfirmacoes?:0).toString(),
+                    valor = evento?.numeroConfirmacoes.toString(),
                     nLinhas = 1,
                     onValueChange = {},
                     modifier = Modifier.padding(end = 10.dp,).width(largura)
@@ -121,7 +115,7 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
 
                 caixaLeituraTexto(
                     titulo = "Total de Vagas",
-                    valor = (evento!!.numVagas?:0).toString(),
+                    valor = evento?.numVagas.toString(),
                     nLinhas = 1,
                     onValueChange = {},
                     modifier = Modifier.padding(start = 10.dp,).width(largura)
@@ -130,7 +124,7 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
 
             caixaLeituraTexto(
                 titulo = "Descrição do Evento",
-                valor = evento!!.descricao?:"Algo deu errado",
+                valor = evento?.descricao?:"Algo deu errado",
                 nLinhas = 7,
                 onValueChange = {},
                 modifier = Modifier.padding(top = 5.dp, bottom = 20.dp, start = 15.dp, end = 15.dp).fillMaxWidth(),
@@ -138,23 +132,36 @@ fun tLeitura(navController: NavController, viewModel: MainViewModel){
             var validarBotao:Boolean
 
                 if (evento != null) {
-                    validarBotao = evento.numeroConfirmacoes!! < evento.numVagas
+                    val user = viewModel.user;
+
+
+                    val usuario  = evento?.participantes?.find { it.name  == user?.name && it.email  == user?.email  }
+
+                    validarBotao = evento.numeroConfirmacoes!! < evento.numVagas!! && usuario == null
+
                 }else{
                     validarBotao = false
                 }
 
                     botao(
                         texto = "Participar",
-                        enabled = validarBotao,
+                        enabled = validarBotao && (evento?.autor?.equals(user) == false),
                         modifier = Modifier.fillMaxWidth().height(80.dp).padding(20.dp),
-                        onCLick = {}
+                        onCLick = {
+
+                            evento?.numeroConfirmacoes = evento?.numeroConfirmacoes?.plus(1);
+                            evento?.participantes?.add(viewModel.user!!)
+                            viewModel.updateEvento(evento!!)
+                            navController.popBackStack()
+
+                        }
                     )
                     botao(
                         texto = "Voltar",
                         enabled = true,
                         modifier = Modifier.fillMaxWidth().height(80.dp).padding(20.dp),
                         onCLick = {
-                            navController.navigate(Route.tHome)
+                            navController.popBackStack()
                         }
                     )
 
